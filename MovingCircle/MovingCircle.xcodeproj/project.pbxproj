@@ -27,6 +27,13 @@
 		296DC25417FA7AA500DF70D6 /* CircleScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 296DC25317FA7AA500DF70D6 /* CircleScene.m */; };
 		296DC25717FA7E9800DF70D6 /* FlatCircle_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 296DC25517FA7E9800DF70D6 /* FlatCircle_1@2x.png */; };
 		296DC25817FA7E9800DF70D6 /* FlatCircle_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 296DC25617FA7E9800DF70D6 /* FlatCircle_1.png */; };
+		29F633B317FBDB3E007D34DE /* Godzilla_Frames1.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633AC17FBDB3E007D34DE /* Godzilla_Frames1.png */; };
+		29F633B417FBDB3E007D34DE /* Godzilla_Frames2.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633AD17FBDB3E007D34DE /* Godzilla_Frames2.png */; };
+		29F633B517FBDB3E007D34DE /* Godzilla_Frames3.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633AE17FBDB3E007D34DE /* Godzilla_Frames3.png */; };
+		29F633B617FBDB3E007D34DE /* Godzilla_Frames4.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633AF17FBDB3E007D34DE /* Godzilla_Frames4.png */; };
+		29F633B717FBDB3E007D34DE /* Godzilla_Frames5.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633B017FBDB3E007D34DE /* Godzilla_Frames5.png */; };
+		29F633B817FBDB3E007D34DE /* Godzilla_Frames6.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633B117FBDB3E007D34DE /* Godzilla_Frames6.png */; };
+		29F633B917FBDB3E007D34DE /* Godzilla_Frames7.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F633B217FBDB3E007D34DE /* Godzilla_Frames7.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +74,13 @@
 		296DC25317FA7AA500DF70D6 /* CircleScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleScene.m; sourceTree = "<group>"; };
 		296DC25517FA7E9800DF70D6 /* FlatCircle_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FlatCircle_1@2x.png"; sourceTree = "<group>"; };
 		296DC25617FA7E9800DF70D6 /* FlatCircle_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FlatCircle_1.png; sourceTree = "<group>"; };
+		29F633AC17FBDB3E007D34DE /* Godzilla_Frames1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames1.png; sourceTree = "<group>"; };
+		29F633AD17FBDB3E007D34DE /* Godzilla_Frames2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames2.png; sourceTree = "<group>"; };
+		29F633AE17FBDB3E007D34DE /* Godzilla_Frames3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames3.png; sourceTree = "<group>"; };
+		29F633AF17FBDB3E007D34DE /* Godzilla_Frames4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames4.png; sourceTree = "<group>"; };
+		29F633B017FBDB3E007D34DE /* Godzilla_Frames5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames5.png; sourceTree = "<group>"; };
+		29F633B117FBDB3E007D34DE /* Godzilla_Frames6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames6.png; sourceTree = "<group>"; };
+		29F633B217FBDB3E007D34DE /* Godzilla_Frames7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Godzilla_Frames7.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +160,7 @@
 		296DC21F17FA783C00DF70D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				29F633AB17FBDB29007D34DE /* Godzilla Frames */,
 				296DC23317FA783C00DF70D6 /* Spaceship.png */,
 				296DC25517FA7E9800DF70D6 /* FlatCircle_1@2x.png */,
 				296DC25617FA7E9800DF70D6 /* FlatCircle_1.png */,
@@ -173,6 +188,20 @@
 				296DC24517FA783C00DF70D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		29F633AB17FBDB29007D34DE /* Godzilla Frames */ = {
+			isa = PBXGroup;
+			children = (
+				29F633AC17FBDB3E007D34DE /* Godzilla_Frames1.png */,
+				29F633AD17FBDB3E007D34DE /* Godzilla_Frames2.png */,
+				29F633AE17FBDB3E007D34DE /* Godzilla_Frames3.png */,
+				29F633AF17FBDB3E007D34DE /* Godzilla_Frames4.png */,
+				29F633B017FBDB3E007D34DE /* Godzilla_Frames5.png */,
+				29F633B117FBDB3E007D34DE /* Godzilla_Frames6.png */,
+				29F633B217FBDB3E007D34DE /* Godzilla_Frames7.png */,
+			);
+			name = "Godzilla Frames";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,11 +280,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29F633B817FBDB3E007D34DE /* Godzilla_Frames6.png in Resources */,
+				29F633B517FBDB3E007D34DE /* Godzilla_Frames3.png in Resources */,
+				29F633B717FBDB3E007D34DE /* Godzilla_Frames5.png in Resources */,
 				296DC22317FA783C00DF70D6 /* InfoPlist.strings in Resources */,
 				296DC25717FA7E9800DF70D6 /* FlatCircle_1@2x.png in Resources */,
 				296DC25817FA7E9800DF70D6 /* FlatCircle_1.png in Resources */,
+				29F633B917FBDB3E007D34DE /* Godzilla_Frames7.png in Resources */,
 				296DC23617FA783C00DF70D6 /* Images.xcassets in Resources */,
+				29F633B417FBDB3E007D34DE /* Godzilla_Frames2.png in Resources */,
+				29F633B617FBDB3E007D34DE /* Godzilla_Frames4.png in Resources */,
 				296DC23417FA783C00DF70D6 /* Spaceship.png in Resources */,
+				29F633B317FBDB3E007D34DE /* Godzilla_Frames1.png in Resources */,
 				296DC22C17FA783C00DF70D6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -490,6 +526,7 @@
 				296DC24E17FA783C00DF70D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		296DC24F17FA783C00DF70D6 /* Build configuration list for PBXNativeTarget "MovingCircleTests" */ = {
 			isa = XCConfigurationList;
@@ -498,6 +535,7 @@
 				296DC25117FA783C00DF70D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

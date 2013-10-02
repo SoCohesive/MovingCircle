@@ -49,7 +49,7 @@ static const uint32_t circleCategory       =  0x1 << 1;
         
         circle = [SKSpriteNode spriteNodeWithImageNamed:@"FlatCircle_1.png"];
         circle.position = CGPointMake([self makeRandomXBetween:0 and:self.size.width],[self makeRandomYBetween:0 and:self.frame.size.height]);
-
+        
         //set up collision logic
         circle.physicsBody.categoryBitMask = circleCategory;
         circle.physicsBody.contactTestBitMask = frameEdgesCategory;
@@ -67,9 +67,9 @@ static const uint32_t circleCategory       =  0x1 << 1;
         circle.physicsBody.restitution = 1;
         circle.physicsBody.mass = 0;
         circle.physicsBody.friction = 0;
-        circle.physicsBody.velocity = CGVectorMake(500,500);
+        circle.physicsBody.velocity = CGVectorMake(400,400);
         circle.physicsBody.affectedByGravity = NO;
-        circle.physicsBody.angularVelocity = 2.5;
+        circle.physicsBody.angularVelocity =.2f;
 
     }
     
@@ -78,6 +78,7 @@ static const uint32_t circleCategory       =  0x1 << 1;
 
 - (void)didEndContact:(SKPhysicsContact *)contact {
     
+
 }
 
 
