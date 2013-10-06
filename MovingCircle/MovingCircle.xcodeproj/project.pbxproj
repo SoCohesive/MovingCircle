@@ -11,6 +11,12 @@
 		2962AF4F18020EC500BAC13B /* BaseCircle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF4D18020EC500BAC13B /* BaseCircle@2x.png */; };
 		2962AF5318020FAF00BAC13B /* BaseCircle_Bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF5118020FAF00BAC13B /* BaseCircle_Bug.png */; };
 		2962AF5418020FAF00BAC13B /* BaseCircle_Bug@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF5218020FAF00BAC13B /* BaseCircle_Bug@2x.png */; };
+		2962AF591802162200BAC13B /* LeftWing.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF551802162200BAC13B /* LeftWing.png */; };
+		2962AF5A1802162200BAC13B /* LeftWing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF561802162200BAC13B /* LeftWing@2x.png */; };
+		2962AF5B1802162200BAC13B /* RightWing.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF571802162200BAC13B /* RightWing.png */; };
+		2962AF5C1802162200BAC13B /* RightWing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF581802162200BAC13B /* RightWing@2x.png */; };
+		2962AF5F1802162900BAC13B /* HeadCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF5D1802162900BAC13B /* HeadCircle.png */; };
+		2962AF601802162900BAC13B /* HeadCircle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2962AF5E1802162900BAC13B /* HeadCircle@2x.png */; };
 		296DC21717FA783C00DF70D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296DC21617FA783C00DF70D6 /* Foundation.framework */; };
 		296DC21917FA783C00DF70D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296DC21817FA783C00DF70D6 /* CoreGraphics.framework */; };
 		296DC21B17FA783C00DF70D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296DC21A17FA783C00DF70D6 /* UIKit.framework */; };
@@ -51,6 +57,12 @@
 		2962AF4D18020EC500BAC13B /* BaseCircle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BaseCircle@2x.png"; sourceTree = "<group>"; };
 		2962AF5118020FAF00BAC13B /* BaseCircle_Bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BaseCircle_Bug.png; sourceTree = "<group>"; };
 		2962AF5218020FAF00BAC13B /* BaseCircle_Bug@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BaseCircle_Bug@2x.png"; sourceTree = "<group>"; };
+		2962AF551802162200BAC13B /* LeftWing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LeftWing.png; sourceTree = "<group>"; };
+		2962AF561802162200BAC13B /* LeftWing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LeftWing@2x.png"; sourceTree = "<group>"; };
+		2962AF571802162200BAC13B /* RightWing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RightWing.png; sourceTree = "<group>"; };
+		2962AF581802162200BAC13B /* RightWing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RightWing@2x.png"; sourceTree = "<group>"; };
+		2962AF5D1802162900BAC13B /* HeadCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HeadCircle.png; sourceTree = "<group>"; };
+		2962AF5E1802162900BAC13B /* HeadCircle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HeadCircle@2x.png"; sourceTree = "<group>"; };
 		296DC21317FA783C00DF70D6 /* MovingCircle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovingCircle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		296DC21617FA783C00DF70D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		296DC21817FA783C00DF70D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -111,6 +123,12 @@
 		2962AF5018020EC800BAC13B /* LadyBug_Images */ = {
 			isa = PBXGroup;
 			children = (
+				2962AF5D1802162900BAC13B /* HeadCircle.png */,
+				2962AF5E1802162900BAC13B /* HeadCircle@2x.png */,
+				2962AF551802162200BAC13B /* LeftWing.png */,
+				2962AF561802162200BAC13B /* LeftWing@2x.png */,
+				2962AF571802162200BAC13B /* RightWing.png */,
+				2962AF581802162200BAC13B /* RightWing@2x.png */,
 				2962AF5118020FAF00BAC13B /* BaseCircle_Bug.png */,
 				2962AF5218020FAF00BAC13B /* BaseCircle_Bug@2x.png */,
 				2962AF4C18020EC500BAC13B /* BaseCircle.png */,
@@ -283,15 +301,21 @@
 				296DC22317FA783C00DF70D6 /* InfoPlist.strings in Resources */,
 				29EA1E021801C720003F6777 /* spark.png in Resources */,
 				296DC25717FA7E9800DF70D6 /* FlatCircle_1@2x.png in Resources */,
+				2962AF5B1802162200BAC13B /* RightWing.png in Resources */,
 				29F633BC17FD06D7007D34DE /* godzilla.atlas in Resources */,
+				2962AF5C1802162200BAC13B /* RightWing@2x.png in Resources */,
 				296DC25817FA7E9800DF70D6 /* FlatCircle_1.png in Resources */,
 				2962AF4F18020EC500BAC13B /* BaseCircle@2x.png in Resources */,
 				296DC23617FA783C00DF70D6 /* Images.xcassets in Resources */,
 				2962AF5418020FAF00BAC13B /* BaseCircle_Bug@2x.png in Resources */,
 				296DC23417FA783C00DF70D6 /* Spaceship.png in Resources */,
+				2962AF5F1802162900BAC13B /* HeadCircle.png in Resources */,
 				2962AF5318020FAF00BAC13B /* BaseCircle_Bug.png in Resources */,
+				2962AF601802162900BAC13B /* HeadCircle@2x.png in Resources */,
 				296DC22C17FA783C00DF70D6 /* Main.storyboard in Resources */,
+				2962AF591802162200BAC13B /* LeftWing.png in Resources */,
 				2962AF4E18020EC500BAC13B /* BaseCircle.png in Resources */,
+				2962AF5A1802162200BAC13B /* LeftWing@2x.png in Resources */,
 				29EA1E011801C720003F6777 /* MyParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

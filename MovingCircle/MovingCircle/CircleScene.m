@@ -17,6 +17,9 @@ static const uint32_t godzillaCategory     =  0x1 << 2;
 {
     SKSpriteNode   *circle;
     SKSpriteNode   *godzilla;
+    SKSpriteNode   *rightWing;
+    SKSpriteNode   *leftWing;
+    
     NSMutableArray *godzillaTextures;
     NSArray        *godzillaFrames;
     
@@ -99,6 +102,18 @@ if (!circle) {
 //    circle.physicsBody.velocity = circleVelocity;
 //    NSLog(@"the circle velocity is %@", circle.physicsBody);
 
+}
+
+-(SKSpriteNode *)createLeftWing  {
+    
+    leftWing  = [SKSpriteNode spriteNodeWithImageNamed:@"LeftWing.png"];
+    return leftWing;
+}
+
+-(SKSpriteNode *)createRightWing {
+    
+    rightWing = [SKSpriteNode spriteNodeWithImageNamed:@"RightWing.png"];
+    return  rightWing;
 }
 
 -(void)createCollisionLogicForCircle {
@@ -202,6 +217,14 @@ if (!circle) {
         sparkle.position = godzilla.position;
         sparkle.name = @"sparkle";
         [self addChild:sparkle];
+        
+        //add wings to base circle
+        [circle addChild:[self createRightWing]];
+        rightWing.position = CGPointMake(15,-2);
+        [circle addChild:[self createLeftWing]];
+        leftWing.position  = CGPointMake(-15,0);
+        
+        
     }
     
 }
