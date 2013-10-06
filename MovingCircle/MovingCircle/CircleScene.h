@@ -14,4 +14,8 @@
 @property (nonatomic) int takenHits;
 
 
+-(void)resetCircleAndGorillaPosition;
+-(void) createCircleVelocity;
+
+
 @end

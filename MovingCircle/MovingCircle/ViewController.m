@@ -10,6 +10,10 @@
 #import "CircleScene.h"
 
 @implementation ViewController
+{
+
+    CircleScene *circleScene;
+}
 
 - (void)viewDidLoad
 {
@@ -21,9 +25,10 @@
 //    skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SKScene *circleScene = [CircleScene sceneWithSize:circleView.bounds.size];
+    circleScene = [CircleScene sceneWithSize:circleView.bounds.size];
     circleScene.scaleMode = SKSceneScaleModeAspectFill;
-    
+    self.view.clipsToBounds = YES;
+
     // Present the scene.
     [circleView presentScene:circleScene];
 }
@@ -48,4 +53,9 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (IBAction)resetButtonAction:(id)sender {
+    
+    [circleScene resetCircleAndGorillaPosition];
+    
+}
 @end

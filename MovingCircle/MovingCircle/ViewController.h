@@ -11,4 +11,6 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)resetButtonAction:(id)sender;
+
 @end
