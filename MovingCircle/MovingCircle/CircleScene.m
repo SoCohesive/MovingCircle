@@ -29,6 +29,10 @@ static const uint32_t starCategory         =  0x1 << 2;
     CGPoint        *lowerBound;
     CGPoint        *upperBound;
     NSTimer        *timer;
+    
+    AVAudioPlayer  *magicSoundEffect;
+    
+
 }
 
 -(id)initWithSize:(CGSize)size
@@ -70,7 +74,8 @@ static const uint32_t starCategory         =  0x1 << 2;
 #pragma mark create circle
 - (SKSpriteNode *)createCircle {
         circle = [SKSpriteNode spriteNodeWithImageNamed:@"BaseCircle_Bug.png"];
-        circle.position = CGPointMake([self makeRandomXBetween:0 and:self.size.width],[self makeRandomYBetween:0 and:self.frame.size.height]);
+        circle.position = CGPointMake([self makeRandomXBetween:circle.frame.size.width and:self.size.width with:circle],
+                                      [self makeRandomYBetween:circle.frame.size.height and:self.frame.size.height with:circle]);
         circle.physicsBody.velocity = CGVectorMake(0, 0);
     
         timer = [NSTimer scheduledTimerWithTimeInterval:.8
@@ -101,12 +106,6 @@ static const uint32_t starCategory         =  0x1 << 2;
     circle.physicsBody.allowsRotation = NO;
     circle.physicsBody.affectedByGravity = NO;
     circle.physicsBody.angularVelocity =.0;
-
-//    
-//    CGVector circleVelocity = CGVectorMake(200, 200);
-//    circle.physicsBody.velocity = circleVelocity;
-//    NSLog(@"the circle velocity is %@", circle.physicsBody);
-
 }
 
 #pragma mark add parts to circle on collision
@@ -168,6 +167,11 @@ static const uint32_t starCategory         =  0x1 << 2;
     SKAction *moveCircle = [SKAction sequence:@[
                                                 [SKAction moveToY:self.size.height+circle.frame.size.height duration:1.0]]];
     [circle runAction:moveCircle];
+    [sparkle removeFromParent];
+    //reset the game after circle moves off screen
+    [self performSelector:@selector(resetCircleAndStarPosition)
+               withObject:self
+               afterDelay:1.5];
 
 }
 
@@ -188,28 +192,25 @@ static const uint32_t starCategory         =  0x1 << 2;
 {
     
     //create atlas for starframes to animate properly
-    SKTextureAtlas *starAtlas = [SKTextureAtlas atlasNamed:@"Star_Frames"];
-    
+    SKTextureAtlas *starAtlas = [SKTextureAtlas atlasNamed:@"Star_Wand"];
     starTextures = [[NSMutableArray alloc] init];
-    int numImages = starAtlas.textureNames.count;
+    
+    float numImages = starAtlas.textureNames.count;
     for (int i=1; i <= numImages/2; i++) {
+        
         NSString *textureName = [NSString stringWithFormat:@"Star_%d", i];
-        SKTexture *temp = [starAtlas textureNamed:textureName];
+        SKTexture *temp =[starAtlas textureNamed:textureName];
         [starTextures addObject:temp];
-        //star= [SKSpriteNode spriteNodeWithTexture:temp];
-        //   NSMutableArray *staraNodes = [NSMutableArray arrayWithObjects:star nil];
+    
     }
+    
     starFrames = [NSArray arrayWithArray:starTextures];
     star = [SKSpriteNode spriteNodeWithTexture:starFrames[0]];
     
-    star.position = CGPointMake([self makeRandomXBetween:star.frame.size.width/2 and:self.frame.size.width- star.frame.size.width],[self makeRandomYBetween:star.frame.size.height and:self.frame.size.height]);
-    
-    //    for (int i=0; i<=7;i++ ) {
-    //        SKTexture *test = starFrames[i];
-    //        star = [SKSpriteNode spriteNodeWithTexture:test];
-    //    }
-    
-    star.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(15,9)];
+    star.position = CGPointMake([self makeRandomXBetween:star.frame.size.width and:self.frame.size.width with:star],
+                                [self makeRandomYBetween:star.frame.size.height and:self.frame.size.height with:star]);
+
+    star.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(15,15)];
     star.physicsBody.dynamic = NO;
     star.physicsBody.usesPreciseCollisionDetection = YES;
     [self createCollisionLogicForStar];
@@ -221,7 +222,7 @@ static const uint32_t starCategory         =  0x1 << 2;
 #pragma animate star
 -(void)animateStar {
     
-    SKAction *starAction = [SKAction group:@[[SKAction animateWithTextures:starTextures timePerFrame:0.1]]];
+    SKAction *starAction = [SKAction group:@[[SKAction animateWithTextures:starTextures timePerFrame:0.1 resize:YES restore:YES]]];
     [star runAction:[SKAction repeatActionForever:starAction]];
     
 }
@@ -233,6 +234,8 @@ static const uint32_t starCategory         =  0x1 << 2;
     star.physicsBody.collisionBitMask = 2;
     
 }
+
+#pragma mark set up emitter
 - (SKEmitterNode*) newSparkleEmitter {
     NSString *sparklePath = [[NSBundle mainBundle] pathForResource: @"MyParticle" ofType:@"sks"];
     sparkle = [NSKeyedUnarchiver unarchiveObjectWithFile:sparklePath];
@@ -240,20 +243,22 @@ static const uint32_t starCategory         =  0x1 << 2;
     sparkle.particleBirthRate=80.0;
     sparkle.numParticlesToEmit=200;
     sparkle.emissionAngle = 60.0;
+    
+    NSError *error;
+    NSURL * backgroundMusicURL = [[NSBundle mainBundle] URLForResource:@"magic-chime-02" withExtension:@"aif"];
+    magicSoundEffect = [[AVAudioPlayer alloc] initWithContentsOfURL:backgroundMusicURL error:&error];
                               
     return sparkle;
                             
 }
 
-
+#pragma set up collision logic
 - (void)didBeginContact:(SKPhysicsContact *)contact {
     
 
     //Create two physics body objects for circle and 
     SKPhysicsBody *firstBody, *secondBody;
     //set up bodies so they are dynamic. First body here is mean to be Circle, second is Star
-   
-
     if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
         
         firstBody = contact.bodyA;
@@ -272,16 +277,10 @@ static const uint32_t starCategory         =  0x1 << 2;
         sparkle.position = star.position;
         sparkle.name = @"sparkle";
         [self addChild:sparkle];
-        
-        //add wings to base circle
-        [circle addChild:[self createRightWing]];
-        rightWing.position = CGPointMake(15,-2);
-        [circle addChild:[self createLeftWing]];
-        leftWing.position  = CGPointMake(-15,0);
-        [circle addChild:[self createLadybugHead]];
-        ladybugHead.position = CGPointMake(2, 25);
-        
-        [self animatLadybugWings];
+         magicSoundEffect.numberOfLoops = 1;
+        [magicSoundEffect prepareToPlay];
+        [magicSoundEffect play];
+    
     }
     
 }
@@ -290,7 +289,18 @@ static const uint32_t starCategory         =  0x1 << 2;
 {
     NSLog(@"Circle was hit");
     self.takenHits++;
+    NSLog(@"taken hits is now %i",self.takenHits);
     circle.physicsBody.velocity = CGVectorMake(0, 0);
+    
+    //add wings to base circle
+    [circle addChild:[self createRightWing]];
+    rightWing.position = CGPointMake(15,-2);
+    [circle addChild:[self createLeftWing]];
+    leftWing.position  = CGPointMake(-15,0);
+    [circle addChild:[self createLadybugHead]];
+    ladybugHead.position = CGPointMake(2, 25);
+    
+    [self animatLadybugWings];
 }
 
 #pragma progamattically create a circle using SKShapeNode
@@ -314,10 +324,13 @@ SKShapeNode *testCircle = [[SKShapeNode alloc] init];
     [sparkle removeFromParent];
     //reset position
     [circle removeAllChildren];
-    circle.position = CGPointMake([self makeRandomXBetween:0 and:self.frame.size.width],[self makeRandomYBetween:0 and:self.frame.size.height]);
+    circle.position = CGPointMake([self makeRandomXBetween:circle.frame.size.width and:self.frame.size.width with:circle],
+                                  [self makeRandomYBetween:circle.frame.size.height and:self.frame.size.height with:circle]);
     circle.physicsBody.velocity = CGVectorMake(0, 0);
     
-    star.position = CGPointMake([self makeRandomXBetween:0 and:self.frame.size.width-star.frame.size.width],[self makeRandomYBetween:0 and:self.frame.size.height-star.frame.size.height]);
+    star.position = CGPointMake([self makeRandomXBetween:star.frame.size.width and:self.frame.size.width with:star],
+                                [self makeRandomYBetween:star.frame.size.height and:self.frame.size.height with:star]);
+   
     
     //delay movement
     timer = [NSTimer scheduledTimerWithTimeInterval:.8
@@ -328,20 +341,38 @@ SKShapeNode *testCircle = [[SKShapeNode alloc] init];
 }
 
 #pragma make random X start position
-- (CGFloat)makeRandomXBetween:(CGFloat)low and:(CGFloat)high
+- (CGFloat)makeRandomXBetween:(CGFloat)low and:(CGFloat)high with:(SKSpriteNode *)nodeBounds
 {
-    CGFloat randomValue = (arc4random() % (int) (high - low));
-    return randomValue;
+
+    int xMin = ([nodeBounds frame].size.width)/2;
+    CGFloat randomValue = xMin + (arc4random() % (int) (high - low));
+    
+    if (circle.frame.origin.x != star.frame.origin.x) {
+   
+        return randomValue;
+        
+}
+ else
+    
+     [self resetCircleAndStarPosition];
+     return randomValue;
     
 }
 
 #pragma make random Y start position
-- (CGFloat)makeRandomYBetween:(CGFloat)low and:(CGFloat)high
+- (CGFloat)makeRandomYBetween:(CGFloat)low and:(CGFloat)high with:(SKSpriteNode *)nodeBounds
 {
-    CGFloat randomValue = (arc4random() % (int) (high - low));
+    int yMin = ([nodeBounds frame].size.height)/2;
+    CGFloat randomValue = yMin + (arc4random() % (int) (high - low));
+    
+    if (circle.frame.origin.y != star.frame.origin.y) {
+        
+        return randomValue;
+    }
+    
+    [self resetCircleAndStarPosition];
     return randomValue;
 }
-
 
 
 

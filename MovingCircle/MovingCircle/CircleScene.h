@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface CircleScene : SKScene <SKPhysicsContactDelegate>
 
