@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface CircleScene : SKScene <SKPhysicsContactDelegate>
 
@@ -14,7 +15,7 @@
 @property (nonatomic) int takenHits;
 
 
--(void)resetCircleAndGorillaPosition;
+-(void)resetCircleAndStarPosition;
 -(void) createCircleVelocity;
 
 

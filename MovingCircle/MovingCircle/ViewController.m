@@ -55,7 +55,7 @@
 
 - (IBAction)resetButtonAction:(id)sender {
     
-    [circleScene resetCircleAndGorillaPosition];
+    [circleScene resetCircleAndStarPosition];
     
 }
 @end

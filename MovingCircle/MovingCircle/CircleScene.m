@@ -10,18 +10,21 @@
 
 static const uint32_t frameEdgesCategory   =  0x1 << 0;
 static const uint32_t circleCategory       =  0x1 << 1;
-static const uint32_t godzillaCategory     =  0x1 << 2;
+static const uint32_t starCategory         =  0x1 << 2;
 
 
 @implementation CircleScene
 {
     SKSpriteNode   *circle;
-    SKSpriteNode   *godzilla;
+    SKSpriteNode   *star;
     SKSpriteNode   *rightWing;
     SKSpriteNode   *leftWing;
+    SKSpriteNode   *ladybugHead;
     
-    NSMutableArray *godzillaTextures;
-    NSArray        *godzillaFrames;
+    NSMutableArray *starTextures;
+    NSArray        *starFrames;
+    
+    SKEmitterNode  *sparkle;
     
     CGPoint        *lowerBound;
     CGPoint        *upperBound;
@@ -33,7 +36,13 @@ static const uint32_t godzillaCategory     =  0x1 << 2;
     if (self = [super initWithSize:size])
     {
         /* Setup your scene here */
-        self.backgroundColor = [SKColor lightGrayColor];
+        SKSpriteNode *backgroundSprite;
+        SKTexture    *backgroundImageTexture =[SKTexture textureWithImage:[UIImage imageNamed:@"Jungle_BG.png"]];
+        backgroundSprite = [SKSpriteNode spriteNodeWithTexture:backgroundImageTexture];
+        backgroundSprite.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+        [self addChild:backgroundSprite];
+
+        
         self.physicsWorld.contactDelegate=self;
         //Initialize your properties
         self.takenHits=0;
@@ -51,18 +60,15 @@ static const uint32_t godzillaCategory     =  0x1 << 2;
         self.physicsWorld.gravity = CGVectorMake(0,-9);
         
         [self addChild:[self createCircle]];
-        [self addChild:[self createGodzilla]];
+        [self addChild:[self createStar]];
         //[self addChild:[self createShapeDot]];
-        [self animateGodzilla];
+        [self animateStar];
     }
     return self;
 }
 
 #pragma mark create circle
 - (SKSpriteNode *)createCircle {
-
-if (!circle) {
-    
         circle = [SKSpriteNode spriteNodeWithImageNamed:@"BaseCircle_Bug.png"];
         circle.position = CGPointMake([self makeRandomXBetween:0 and:self.size.width],[self makeRandomYBetween:0 and:self.frame.size.height]);
         circle.physicsBody.velocity = CGVectorMake(0, 0);
@@ -72,7 +78,6 @@ if (!circle) {
                                                selector:@selector(createCircleVelocity)
                                                userInfo:nil
                                                 repeats:NO];
-}
     return circle;
 }
 
@@ -104,6 +109,7 @@ if (!circle) {
 
 }
 
+#pragma mark add parts to circle on collision
 -(SKSpriteNode *)createLeftWing  {
     
     leftWing  = [SKSpriteNode spriteNodeWithImageNamed:@"LeftWing.png"];
@@ -112,8 +118,57 @@ if (!circle) {
 
 -(SKSpriteNode *)createRightWing {
     
-    rightWing = [SKSpriteNode spriteNodeWithImageNamed:@"RightWing.png"];
+    SKTexture *rightWingTexture = [SKTexture textureWithImageNamed:@"RightWing.png"];
+    rightWing = [SKSpriteNode spriteNodeWithTexture:rightWingTexture];
+
     return  rightWing;
+}
+
+-(SKSpriteNode *)createLadybugHead {
+    
+    ladybugHead = [SKSpriteNode spriteNodeWithImageNamed:@"HeadCircle.png"];
+    return  ladybugHead;
+}
+
+#pragma mark animate wings and circle flying up
+-(void)animatLadybugWings {
+    
+    rightWing.anchorPoint = CGPointMake(0.5, .5);
+    leftWing.anchorPoint  = CGPointMake(0.5, 0.5);
+    
+    //RightSide Wing position
+    CGPoint position = rightWing.position;
+    CGFloat posX= position.x;
+    CGFloat posY = 20;
+    rightWing.position = CGPointMake(posX, posY);
+    rightWing.anchorPoint = CGPointMake(0.5, 1.0);
+    
+
+    //LeftWing position
+    CGPoint leftPosition = leftWing.position;
+    CGFloat leftPosX= leftPosition.x-5;
+    CGFloat leftPosY = 26;
+    leftWing.position = CGPointMake(leftPosX,leftPosY);
+    leftWing.anchorPoint = CGPointMake(0, 1.0);
+    
+
+    SKAction *rotateAction = [SKAction sequence:@[
+                                                 [SKAction rotateByAngle:1 duration:.5],
+                                                 [SKAction rotateByAngle:-1 duration:.5]]];
+    SKAction *rotateInfinite = [SKAction repeatActionForever:rotateAction];
+    [rightWing runAction:rotateInfinite];
+    
+    
+    SKAction *leftRotateAction = [SKAction sequence:@[
+                                                      [SKAction rotateByAngle:-1 duration:.5],
+                                                      [SKAction rotateByAngle:1 duration:.5]]];
+    SKAction *leftRotateInfinite = [SKAction repeatActionForever:leftRotateAction];
+    [leftWing runAction:leftRotateInfinite];
+    
+    SKAction *moveCircle = [SKAction sequence:@[
+                                                [SKAction moveToY:self.size.height+circle.frame.size.height duration:1.0]]];
+    [circle runAction:moveCircle];
+
 }
 
 -(void)createCollisionLogicForCircle {
@@ -124,63 +179,63 @@ if (!circle) {
     circle.physicsBody.collisionBitMask = 1;
     
     //set up collision logic for gozilla
-    circle.physicsBody.contactTestBitMask = godzillaCategory;
+    circle.physicsBody.contactTestBitMask = starCategory;
     circle.physicsBody.collisionBitMask = 2;
 }
 
-#pragma create godzilla
--(SKSpriteNode *)createGodzilla
+#pragma create star
+-(SKSpriteNode *)createStar
 {
     
-    //create atlas for godzilla frames to animate properly
-    SKTextureAtlas *godzillaAtlas = [SKTextureAtlas atlasNamed:@"godzilla"];
+    //create atlas for starframes to animate properly
+    SKTextureAtlas *starAtlas = [SKTextureAtlas atlasNamed:@"Star_Frames"];
     
-    godzillaTextures = [[NSMutableArray alloc] init];
-    int numImages = godzillaAtlas.textureNames.count;
+    starTextures = [[NSMutableArray alloc] init];
+    int numImages = starAtlas.textureNames.count;
     for (int i=1; i <= numImages/2; i++) {
-        NSString *textureName = [NSString stringWithFormat:@"Godzilla%d", i];
-        SKTexture *temp = [godzillaAtlas textureNamed:textureName];
-        [godzillaTextures addObject:temp];
-        //godzilla = [SKSpriteNode spriteNodeWithTexture:temp];
-        //   NSMutableArray *godzillaNoes = [NSMutableArray arrayWithObjects:godzilla, nil];
+        NSString *textureName = [NSString stringWithFormat:@"Star_%d", i];
+        SKTexture *temp = [starAtlas textureNamed:textureName];
+        [starTextures addObject:temp];
+        //star= [SKSpriteNode spriteNodeWithTexture:temp];
+        //   NSMutableArray *staraNodes = [NSMutableArray arrayWithObjects:star nil];
     }
-    godzillaFrames = [NSArray arrayWithArray:godzillaTextures];
-    godzilla = [SKSpriteNode spriteNodeWithTexture:godzillaFrames[0]];
+    starFrames = [NSArray arrayWithArray:starTextures];
+    star = [SKSpriteNode spriteNodeWithTexture:starFrames[0]];
     
-    godzilla.position = CGPointMake([self makeRandomXBetween:godzilla.frame.size.width/2 and:self.frame.size.width- godzilla.frame.size.width],[self makeRandomYBetween:godzilla.frame.size.height and:self.frame.size.height]);
+    star.position = CGPointMake([self makeRandomXBetween:star.frame.size.width/2 and:self.frame.size.width- star.frame.size.width],[self makeRandomYBetween:star.frame.size.height and:self.frame.size.height]);
     
     //    for (int i=0; i<=7;i++ ) {
-    //        SKTexture *test = godzillaFrames[i];
-    //        godzilla = [SKSpriteNode spriteNodeWithTexture:test];
+    //        SKTexture *test = starFrames[i];
+    //        star = [SKSpriteNode spriteNodeWithTexture:test];
     //    }
     
-    godzilla.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(15,9)];
-    godzilla.physicsBody.dynamic = NO;
-    godzilla.physicsBody.usesPreciseCollisionDetection = YES;
-    [self createCollisionLogicForGodzilla];
-    return godzilla;
-    [self animateGodzilla];
+    star.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(15,9)];
+    star.physicsBody.dynamic = NO;
+    star.physicsBody.usesPreciseCollisionDetection = YES;
+    [self createCollisionLogicForStar];
+    return star;
+    [self animateStar];
     
 }
 
-#pragma animate godzilla
--(void)animateGodzilla {
+#pragma animate star
+-(void)animateStar {
     
-    SKAction *godzillaEatingAction = [SKAction group:@[[SKAction animateWithTextures:godzillaTextures timePerFrame:0.1]]];
-    [godzilla runAction:[SKAction repeatActionForever:godzillaEatingAction]];
+    SKAction *starAction = [SKAction group:@[[SKAction animateWithTextures:starTextures timePerFrame:0.1]]];
+    [star runAction:[SKAction repeatActionForever:starAction]];
     
 }
 
-#pragma mark collision logic for godzilla
--(void)createCollisionLogicForGodzilla {
-    godzilla.physicsBody.categoryBitMask = godzillaCategory;
-    godzilla.physicsBody.contactTestBitMask = circleCategory;
-    godzilla.physicsBody.collisionBitMask = 2;
+#pragma mark collision logic for star
+-(void)createCollisionLogicForStar {
+    star.physicsBody.categoryBitMask = starCategory;
+    star.physicsBody.contactTestBitMask = circleCategory;
+    star.physicsBody.collisionBitMask = 2;
     
 }
 - (SKEmitterNode*) newSparkleEmitter {
     NSString *sparklePath = [[NSBundle mainBundle] pathForResource: @"MyParticle" ofType:@"sks"];
-    SKEmitterNode *sparkle = [NSKeyedUnarchiver unarchiveObjectWithFile:sparklePath];
+    sparkle = [NSKeyedUnarchiver unarchiveObjectWithFile:sparklePath];
     
     sparkle.particleBirthRate=80.0;
     sparkle.numParticlesToEmit=200;
@@ -194,9 +249,9 @@ if (!circle) {
 - (void)didBeginContact:(SKPhysicsContact *)contact {
     
 
-    //Create two physics body objects for circle and godzilla
+    //Create two physics body objects for circle and 
     SKPhysicsBody *firstBody, *secondBody;
-    //set up bodies so they are dynamic. First body here is mean to be Circle, second is Godzilla
+    //set up bodies so they are dynamic. First body here is mean to be Circle, second is Star
    
 
     if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
@@ -210,11 +265,11 @@ if (!circle) {
         firstBody = contact.bodyB;
         secondBody = contact.bodyA;
     }
-    if ((firstBody.categoryBitMask & godzillaCategory) != 0) {
+    if ((firstBody.categoryBitMask & starCategory) != 0) {
         
-        [self collision:circle didCollideWithMonster:godzilla];
-        SKEmitterNode *sparkle = [self newSparkleEmitter];
-        sparkle.position = godzilla.position;
+        [self collision:circle didCollideWithMonster:star];
+        sparkle = [self newSparkleEmitter];
+        sparkle.position = star.position;
         sparkle.name = @"sparkle";
         [self addChild:sparkle];
         
@@ -223,13 +278,15 @@ if (!circle) {
         rightWing.position = CGPointMake(15,-2);
         [circle addChild:[self createLeftWing]];
         leftWing.position  = CGPointMake(-15,0);
+        [circle addChild:[self createLadybugHead]];
+        ladybugHead.position = CGPointMake(2, 25);
         
-        
+        [self animatLadybugWings];
     }
     
 }
 
-- (void)collision:(SKSpriteNode *)_circle didCollideWithMonster:(SKSpriteNode *)_godzilla
+- (void)collision:(SKSpriteNode *)_circle didCollideWithMonster:(SKSpriteNode *)_star
 {
     NSLog(@"Circle was hit");
     self.takenHits++;
@@ -252,13 +309,15 @@ SKShapeNode *testCircle = [[SKShapeNode alloc] init];
 
 }
 #pragma mark reset node positions 
--(void) resetCircleAndGorillaPosition {
+-(void) resetCircleAndStarPosition {
     
+    [sparkle removeFromParent];
     //reset position
+    [circle removeAllChildren];
     circle.position = CGPointMake([self makeRandomXBetween:0 and:self.frame.size.width],[self makeRandomYBetween:0 and:self.frame.size.height]);
     circle.physicsBody.velocity = CGVectorMake(0, 0);
     
-    godzilla.position = CGPointMake([self makeRandomXBetween:0 and:self.frame.size.width-godzilla.frame.size.width],[self makeRandomYBetween:0 and:self.frame.size.height-godzilla.frame.size.height]);
+    star.position = CGPointMake([self makeRandomXBetween:0 and:self.frame.size.width-star.frame.size.width],[self makeRandomYBetween:0 and:self.frame.size.height-star.frame.size.height]);
     
     //delay movement
     timer = [NSTimer scheduledTimerWithTimeInterval:.8
