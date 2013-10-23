@@ -30,9 +30,6 @@ static const uint32_t starCategory         =  0x1 << 2;
     CGPoint        *upperBound;
     NSTimer        *timer;
     
-    AVAudioPlayer  *magicSoundEffect;
-    
-
 }
 
 -(id)initWithSize:(CGSize)size
@@ -245,8 +242,6 @@ static const uint32_t starCategory         =  0x1 << 2;
     sparkle.emissionAngle = 60.0;
     
     NSError *error;
-    NSURL * backgroundMusicURL = [[NSBundle mainBundle] URLForResource:@"magic-chime-02" withExtension:@"aif"];
-    magicSoundEffect = [[AVAudioPlayer alloc] initWithContentsOfURL:backgroundMusicURL error:&error];
                               
     return sparkle;
                             
@@ -277,9 +272,6 @@ static const uint32_t starCategory         =  0x1 << 2;
         sparkle.position = star.position;
         sparkle.name = @"sparkle";
         [self addChild:sparkle];
-         magicSoundEffect.numberOfLoops = 1;
-        [magicSoundEffect prepareToPlay];
-        [magicSoundEffect play];
     
     }
     
