@@ -20,6 +20,8 @@ static const uint32_t starCategory         =  0x1 << 2;
     SKSpriteNode   *rightWing;
     SKSpriteNode   *leftWing;
     SKSpriteNode   *ladybugHead;
+    SKSpriteNode   *elephantTrunk;
+    SKSpriteNode   *elephantBody;
     
     NSMutableArray *starTextures;
     NSArray        *starFrames;
@@ -62,6 +64,7 @@ static const uint32_t starCategory         =  0x1 << 2;
         
         [self addChild:[self createCircle]];
         [self addChild:[self createStar]];
+        [self createTrunkandElephant];
         //[self addChild:[self createShapeDot]];
         [self animateStar];
     }
@@ -310,6 +313,30 @@ SKShapeNode *testCircle = [[SKShapeNode alloc] init];
     return testCircle;
 
 }
+
+#pragma mark set up Catapult trunk
+-(SKSpriteNode *) createTrunkandElephant {
+    
+    elephantTrunk = [SKSpriteNode spriteNodeWithImageNamed:@"trunk_v2.png"];
+    elephantTrunk.size = CGSizeMake(50, 30);
+    elephantTrunk.position = CGPointMake(self.size.width/2+50, 80);
+   // trunk.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:trunk.size];
+    elephantTrunk.physicsBody.linearDamping = 0;
+    elephantTrunk.physicsBody.angularDamping = 0;
+    
+    
+    elephantBody = [SKSpriteNode spriteNodeWithImageNamed:@"elephantBody_v2.png"];
+    elephantBody.size = CGSizeMake(120,120);
+    elephantBody.position = CGPointMake(elephantTrunk.position.x-78, 60);
+    [self addChild:elephantBody];
+    
+    
+    [self addChild:elephantTrunk];
+    return elephantTrunk;
+    
+    
+}
+
 #pragma mark reset node positions 
 -(void) resetCircleAndStarPosition {
     
