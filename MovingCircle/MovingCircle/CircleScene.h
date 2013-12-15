@@ -14,6 +14,12 @@
 
 //number of times the circle tooks slices from the scissor 
 @property (nonatomic) int takenHits;
+@property (strong,nonatomic) SKSpriteNode *elephantTrunk;
+@property (strong,nonatomic) SKSpriteNode *elephantBody;
+@property(nonatomic) UISwipeGestureRecognizerDirection direction;
+@property(nonatomic) NSUInteger numberOfTouchesRequired;
+@property (nonatomic, strong) SKSpriteNode *selectedNode;
+
 
 
 -(void)resetCircleAndStarPosition;

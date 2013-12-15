@@ -8,29 +8,31 @@
 
 #import "CircleScene.h"
 
-static const uint32_t frameEdgesCategory   =  0x1 << 0;
-static const uint32_t circleCategory       =  0x1 << 1;
-static const uint32_t starCategory         =  0x1 << 2;
+static const uint32_t frameEdgesCategory    =  0x1 << 0;
+static const uint32_t circleCategory        =  0x1 << 1;
+static const uint32_t starCategory          =  0x1 << 2;
+static const uint32_t elephantBodyCategory  =  0x1 << 3;
+static const uint32_t elephantTrunkCategory =  0x1 << 4;
 
 
 @implementation CircleScene
 {
-    SKSpriteNode   *circle;
-    SKSpriteNode   *star;
-    SKSpriteNode   *rightWing;
-    SKSpriteNode   *leftWing;
-    SKSpriteNode   *ladybugHead;
-    SKSpriteNode   *elephantTrunk;
-    SKSpriteNode   *elephantBody;
+    SKSpriteNode         *circle;
+    SKSpriteNode         *star;
+    SKSpriteNode         *rightWing;
+    SKSpriteNode         *leftWing;
+    SKSpriteNode         *ladybugHead;
     
-    NSMutableArray *starTextures;
-    NSArray        *starFrames;
+    SKPhysicsJointSpring *springJoint;
     
-    SKEmitterNode  *sparkle;
+    NSMutableArray       *starTextures;
+    NSArray              *starFrames;
     
-    CGPoint        *lowerBound;
-    CGPoint        *upperBound;
-    NSTimer        *timer;
+    SKEmitterNode        *sparkle;
+    
+    CGPoint              *lowerBound;
+    CGPoint              *upperBound;
+    NSTimer              *timer;
     
 }
 
@@ -317,25 +319,90 @@ SKShapeNode *testCircle = [[SKShapeNode alloc] init];
 #pragma mark set up Catapult trunk
 -(SKSpriteNode *) createTrunkandElephant {
     
-    elephantTrunk = [SKSpriteNode spriteNodeWithImageNamed:@"trunk_v2.png"];
-    elephantTrunk.size = CGSizeMake(50, 30);
-    elephantTrunk.position = CGPointMake(self.size.width/2+50, 80);
-   // trunk.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:trunk.size];
-    elephantTrunk.physicsBody.linearDamping = 0;
-    elephantTrunk.physicsBody.angularDamping = 0;
+    self.elephantTrunk = [SKSpriteNode spriteNodeWithImageNamed:@"trunk_v2.png"];
+    self.elephantTrunk.size = CGSizeMake(40, 20);
+    self.elephantTrunk.position = CGPointMake(self.size.width/2+50, 80);
+    self.elephantTrunk.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:self.elephantTrunk.size];
+    self.elephantTrunk.physicsBody.dynamic = NO;
+    self.elephantTrunk.physicsBody.linearDamping = 0;
+    self.elephantTrunk.physicsBody.angularDamping = 0;
+    
+    //Add elephant body
+    self.elephantBody = [SKSpriteNode spriteNodeWithImageNamed:@"elephantBody_v2.png"];
+    self.elephantBody.size = CGSizeMake(90,90);
+    self.elephantBody.position = CGPointMake(self.elephantTrunk.position.x-60, 60);
+    
+    self.elephantBody.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:self.elephantBody.size];
+    self.elephantBody.physicsBody.dynamic = NO;
+    [self addChild:self.elephantBody];
+    
+    [self addChild:self.elephantTrunk];
     
     
-    elephantBody = [SKSpriteNode spriteNodeWithImageNamed:@"elephantBody_v2.png"];
-    elephantBody.size = CGSizeMake(120,120);
-    elephantBody.position = CGPointMake(elephantTrunk.position.x-78, 60);
-    [self addChild:elephantBody];
-    
-    
-    [self addChild:elephantTrunk];
-    return elephantTrunk;
-    
+    //add physicsjoint
+    //CGPoint anchorA = CGPointMake(self.elephantBody.frame.origin.x,self.elephantBodyframe.origin.y);
+                        springJoint = [SKPhysicsJointSpring   jointWithBodyA:self.elephantBody.physicsBody
+                                                                       bodyB:self.elephantTrunk.physicsBody
+                                                                     anchorA:self.elephantBody.frame.origin
+                                                                     anchorB:self.elephantTrunk.frame.origin];
+
+
+    [self.scene.physicsWorld addJoint:springJoint];
+    return self.elephantTrunk;
     
 }
+
+//- (void)didMoveToView:(SKView *)view {
+//    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+//    [[self view] addGestureRecognizer:gestureRecognizer];
+//}
+
+
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint positionInScene = [touch locationInNode:self];
+    [self selectNodeForTouch:positionInScene];
+}
+
+- (void)selectNodeForTouch:(CGPoint)touchLocation {
+    //1
+    SKSpriteNode *touchedNode = (SKSpriteNode *)[self nodeAtPoint:touchLocation];
+    
+    //2
+	if(![_selectedNode isEqual:touchedNode]) {
+		[_selectedNode removeAllActions];
+		[_selectedNode runAction:[SKAction rotateToAngle:0.0f duration:0.1]];
+        
+		_selectedNode = touchedNode;
+		//3
+		if([[touchedNode name] isEqualToString:@"elephantTrunk"]) {
+			SKAction *sequence = [SKAction sequence:@[[SKAction rotateByAngle:degToRad(-4.0f) duration:0.1],
+													  [SKAction rotateByAngle:0.0 duration:0.1],
+													  [SKAction rotateByAngle:degToRad(4.0f) duration:0.1]]];
+			[_selectedNode runAction:[SKAction repeatActionForever:sequence]];
+		}
+	}
+    
+}
+
+float degToRad(float degree) {
+	return degree / 180.0f * M_PI;
+}
+
+//- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    if (springJoint != nil)
+//    {
+//        springJoint = nil;
+//    }
+//    
+//}
+#pragma mark create new physics joint
+//+ (SKPhysicsJointSpring *)jointWithBodyA:(SKPhysicsBody *)bodyA bodyB:(SKPhysicsBody *)bodyB anchorA:(CGPoint)anchorA anchorB:(CGPoint)anchorB {
+//  
+//}
+
 
 #pragma mark reset node positions 
 -(void) resetCircleAndStarPosition {
